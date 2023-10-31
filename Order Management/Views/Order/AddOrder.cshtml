@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* CSS Styles Go Here */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #terms-popup {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add/Edit Order</h1>
+    <form id="order-form">
+        <!-- Order Information -->
+        <label for="order-id">Order Id</label>
+        <input type="text" id="order-id" readonly>
+
+        <label for="category">Category</label>
+        <select id="category">
+            <option value="Clothing">Clothing</option>
+            <option value="Cosmetics">Cosmetics</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Medicines">Medicines</option>
+        </select>
+
+        <label for="product-name">Product Name</label>
+        <select id="product-name" disabled>
+            <!-- Options will be populated dynamically based on the selected category -->
+        </select>
+
+        <label for="sku">SKU</label>
+        <input type="text" id="sku" readonly>
+
+        <label for="description">Description</label>
+        <textarea id="description"></textarea>
+
+        <label for="price">Price ($)</label>
+        <input type="text" id="price">
+
+        <label for="discount">Discount (%)</label>
+        <input type="text" id="discount">
+
+        <label for="net-price">Net Price ($)</label>
+        <input type="text" id="net-price" readonly>
+
+        <label for="tax">Tax</label>
+        <input type="text" id="tax" readonly>
+
+        <label for="quantity">Quantity</label>
+        <select id="quantity">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+        <label for="shipping-type">Shipping Type</label>
+        <select id="shipping-type">
+            <option value="Standard">Standard</option>
+            <option value="Two Days">Two Days</option>
+            <option value="Next Day">Next Day</option>
+        </select>
+
+        <label for="shipping-charges">Shipping Charges ($)</label>
+        <input type="text" id="shipping-charges" readonly>
+
+        <label for="total-amount">Total Amount Charged ($)</label>
+        <input type="text" id="total-amount" readonly>
+
+        <label for="estimated-delivery">Estimated Delivery</label>
+        <input type="text" id="estimated-delivery" readonly>
+
+        <label for="receive-status-updates">Receive Status Updates</label>
+        <input type="checkbox" id="receive-status-updates">
+
+        <label for="delivery-signature-required">Delivery Signature Required?</label>
+        <input type="radio" name="signature" value="Yes" id="signature-yes"> Yes
+        <input type="radio" name="signature" value="No" id="signature-no" checked> No
+
+        <!-- Customer Information -->
+        <h2>Customer Name</h2>
+
+        <label for="dob">DOB</label>
+        <input type="date" id="dob">
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" pattern="[0-9]{10}" placeholder="1234567890" required>
+
+        <label for="terms-and-conditions">By Submitting I agree to the Terms & Conditions</label>
+        <input type="checkbox" id="terms-and-conditions" required>
+
+        <a href="#" id="terms-link">Terms and Conditions</a>
+
+        <input type="button" value="Submit Order" id="submit-button">
+        <input type="button" value="Cancel" id="cancel-button">
+    </form>
+
+    <div id="terms-popup" class="popup">
+        <h2>Terms and Conditions</h2>
+        <!-- Add your terms and conditions text here -->
+        <button id="close-terms-popup">OK</button>
+    </div>
+
+    <script>
+    // Function to update product name, SKU, tax, and shipping charges based on category
+    function updateProductInfo() {
+        const category = document.getElementById("category").value;
+        const productName = document.getElementById("product-name");
+        const sku = document.getElementById("sku");
+        const tax = document.getElementById("tax");
+        const shippingType = document.getElementById("shipping-type").value;
+        const shippingCharges = document.getElementById("shipping-charges");
+        
+        switch (category) {
+            case "Clothing":
+                productName.innerHTML = "";
+                productName.disabled = false;
+                productName.add(new Option("Woven Shirt"));
+                sku.value = "1236";
+                tax.value = "5%";
+                break;
+            case "Cosmetics":
+                productName.innerHTML = "";
+                productName.disabled = false;
+                productName.add(new Option("Cosmetic Product"));
+                sku.value = "4567";
+                tax.value = "10%";
+                break;
+            case "Electronics":
+                productName.innerHTML = "";
+                productName.disabled = false;
+                productName.add(new Option("Electronic Gadget"));
+                sku.value = "7890";
+                tax.value = "15%";
+                break;
+            case "Medicines":
+                productName.innerHTML = "";
+                productName.disabled = false;
+                productName.add(new Option("Medicine"));
+                sku.value = "1011";
+                tax.value = "18%";
+                break;
+            default:
+                productName.innerHTML = "<option value=''>Select Category</option>";
+                productName.disabled = true;
+                sku.value = "";
+                tax.value = "";
+        }
+
+        // Calculate and update shipping charges
+        switch (shippingType) {
+            case "Standard":
+                shippingCharges.value = "$5";
+                break;
+            case "Two Days":
+                shippingCharges.value = "$10";
+                break;
+            case "Next Day":
+                shippingCharges.value = "$15";
+                break;
+        }
+    }
+
+    // Function to calculate total amount charged
+    function calculateTotalAmount() {
+        const price = parseFloat(document.getElementById("price").value);
+        const discount = parseFloat(document.getElementById("discount").value) / 100;
+        const tax = parseFloat(document.getElementById("tax").value) / 100;
+        const quantity = parseInt(document.getElementById("quantity").value);
+        const shippingCharges = parseFloat(document.getElementById("shipping-charges").value.replace('$', ''));
+        
+        const netPrice = price * (1 - discount);
+        const totalAmount = netPrice * quantity * (1 + tax) + shippingCharges;
+        
+        document.getElementById("net-price").value = netPrice.toFixed(2);
+        document.getElementById("total-amount").value = totalAmount.toFixed(2);
+    }
+
+    // Function to handle the Terms and Conditions popup
+    const termsLink = document.getElementById("terms-link");
+    const termsPopup = document.getElementById("terms-popup");
+    const closeTermsPopup = document.getElementById("close-terms-popup");
+
+    termsLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        termsPopup.style.display = "block";
+    });
+
+    closeTermsPopup.addEventListener("click", function() {
+        termsPopup.style.display = "none";
+    });
+
+    // Attach event listeners for category change, quantity change, and input changes
+    document.getElementById("category").addEventListener("change", updateProductInfo);
+    document.getElementById("quantity").addEventListener("change", calculateTotalAmount);
+    document.getElementById("price").addEventListener("input", calculateTotalAmount);
+    document.getElementById("discount").addEventListener("input", calculateTotalAmount);
+    document.getElementById("shipping-type").addEventListener("change", calculateTotalAmount);
+
+    // Initial update based on category selection
+    updateProductInfo();
+</script>
+
+</body>
+</html>

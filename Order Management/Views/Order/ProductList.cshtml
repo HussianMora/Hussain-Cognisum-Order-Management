@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Master</title>
+</head>
+<body>
+    <h1>Product Master</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Product Name</th>
+                <th>SKU</th>
+                <th>Description</th>
+                <th>Price ($)</th>
+                <th>Discount (%)</th>
+            </tr>
+        </thead>
+        <tbody id="product-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        var productData = [
+            {
+                "Category": "Electronics",
+                "ProductName": "Washing Machine",
+                "SKU": 452,
+                "Description": "Washing Machine description here",
+                "Price": 1500,
+                "Discount": 10
+            },
+            {
+                "Category": "Electronics",
+                "ProductName": "Air Conditioner",
+                "SKU": 455,
+                "Description": "Air Conditioner description here",
+                "Price": 3500,
+                "Discount": 10
+            },
+            {
+                "Category": "Electronics",
+                "ProductName": "Refrigerator",
+                "SKU": 459,
+                "Description": "Refrigerator description here",
+                "Price": 4000,
+                "Discount": 10
+            },
+            {
+                "Category": "Cosmetics",
+                "ProductName": "Shaving Cream",
+                "SKU": 659,
+                "Description": "Shaving Cream description here",
+                "Price": 40,
+                "Discount": 7
+            },
+            {
+                "Category": "Cosmetics",
+                "ProductName": "Razor",
+                "SKU": 658,
+                "Description": "Razor description here",
+                "Price": 45,
+                "Discount": 10
+            },
+            {
+                "Category": "Clothing",
+                "ProductName": "Trouser",
+                "SKU": 789,
+                "Description": "Trouser description here",
+                "Price": 26,
+                "Discount": 5
+            },
+            {
+                "Category": "Clothing",
+                "ProductName": "Woven Shirt",
+                "SKU": 1236,
+                "Description": "Woven Shirt description here",
+                "Price": 12,
+                "Discount": 10
+            },
+            {
+                "Category": "Medicines",
+                "ProductName": "Aspirin 15mg",
+                "SKU": 990,
+                "Description": "Aspirin 15mg description here",
+                "Price": 5.5,
+                "Discount": 5
+            },
+            {
+                "Category": "Medicines",
+                "ProductName": "VCure 30 mg",
+                "SKU": 991,
+                "Description": "VCure 30 mg description here",
+                "Price": 7.4,
+                "Discount": 5
+            }
+        ];
+
+        var tableBody = document.getElementById("product-table-body");
+
+        productData.forEach(function (product) {
+            var row = tableBody.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+
+            cell1.innerHTML = product.Category;
+            cell2.innerHTML = product.ProductName;
+            cell3.innerHTML = product.SKU;
+            cell4.innerHTML = product.Description;
+            cell5.innerHTML = product.Price;
+            cell6.innerHTML = product.Discount + "%";
+        });
+    </script>
+</body>
+</html>

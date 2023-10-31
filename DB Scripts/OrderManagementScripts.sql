@@ -1,0 +1,22 @@
+CREATE TABLE `order` (
+    `order_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category` VARCHAR(255) NOT NULL,
+    `product_name` VARCHAR(255) NOT NULL,
+    `sku` INT NOT NULL,
+    `description` TEXT,
+    `price` DECIMAL(10, 2) NOT NULL,
+    `discount` DECIMAL(5, 2) NOT NULL,
+    `net_price` DECIMAL(10, 2) NOT NULL,
+    `tax` DECIMAL(5, 2) NOT NULL,
+    `quantity` INT NOT NULL,
+    `shipping_type` VARCHAR(255) NOT NULL,
+    `shipping_charges` DECIMAL(10, 2) NOT NULL,
+    `total_amount_charged` DECIMAL(10, 2) NOT NULL,
+    `estimated_delivery` DATE NOT NULL,
+    `receive_status_updates` BOOLEAN NOT NULL,
+    `delivery_signature_required` BOOLEAN NOT NULL,
+    `customer_name` VARCHAR(255) NOT NULL,
+    `dob` DATE NOT NULL,
+    `phone` VARCHAR(10) NOT NULL,
+    `terms_and_conditions` BOOLEAN NOT NULL
+);
