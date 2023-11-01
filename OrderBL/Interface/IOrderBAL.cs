@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace OrderBL.Interface
 {
-    internal interface IOrderBAL
+    public interface IOrderBAL
     {
+        Task<List<Order>> GetAllOrdersAsync();
+        Task<Order> GetOrderByIdAsync(int orderId);
+        Task AddOrderAsync(Order order);
+        Task UpdateOrderAsync(Order order);
+        Task DeleteOrderAsync(int orderId);
     }
 }

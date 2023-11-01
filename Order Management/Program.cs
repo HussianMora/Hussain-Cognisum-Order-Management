@@ -1,7 +1,18 @@
+using OrderBL;
+using OrderBL.Interface;
+using OrderDAL;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+           options.UseSqlServer(Configuration.GetConnectionString("DBConnectionString")));
+
+// Register your repository interface and implementation
+builder.Services.AddScoped<IOrderDL, OrderDL>();
+builder.Services.AddScoped<IOrderBAL, OrderBAL>();
 
 var app = builder.Build();
 

@@ -1,22 +1,30 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Order_Management.Models;
+using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using OrderBL.Interface;
 
 namespace Order_Management.Controllers
 {
     public class OrderController : Controller
     {
         private readonly ILogger<OrderController> _logger;
+        private readonly IOrderBAL _orderBAL;
 
-        public OrderController(ILogger<OrderController> logger)
+        public OrderController(ILogger<OrderController> logger, IOrderBAL orderBAL)
         {
             _logger = logger;
+            _orderBAL = orderBAL;
         }
 
-        public IActionResult Index(int page = 1, int pageSize = 10, string sortColumn = "OrderId", bool sortAscending = true)
+        public async Task<IActionResult> Index(int page = 1, int pageSize = 10, string sortColumn = "OrderId", bool sortAscending = true)
         {
-            // Simulated list of orders (replace with your actual data)
-            List<OrderList> allOrders = GetOrders();
+            // Get a list of orders asynchronously from the business layer
+            List<OrderList> allOrders = await _orderBAL.GetAllOrdersAsync();
 
             // Sorting
             if (!string.IsNullOrEmpty(sortColumn))
@@ -68,31 +76,12 @@ namespace Order_Management.Controllers
             }
         }
 
-        private List<OrderList> GetOrders()
+        public async Task<IActionResult> Index()
         {
-            throw new NotImplementedException();
-        }
+            // Get a list of orders asynchronously from the business layer
+            List<OrderList> orders = await _orderBAL.GetAllOrdersAsync();
 
-        public IActionResult Index()
-        {
-            List<OrderList> orders = new List<OrderList>
-        {
-            new OrderList
-            {
-                OrderId = 1,
-                SKU = "SKU123",
-                ProductName = "Product A (Category 1)",
-                Qty = 5,
-                ShippingType = "Standard",
-                TotalAmount = 99.95M,
-                CustomerName = "John Doe",
-                DOB = new DateTime(1990, 5, 15),
-                Phone = "123-456-7890"
-            },
-            // Add more orders here
-        };
-
-            return View("OrderList",orders);
+            return View("OrderList", orders);
         }
 
         [HttpGet]
@@ -102,10 +91,12 @@ namespace Order_Management.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddOrder(Order order)
+        public async Task<IActionResult> AddOrder(Order order)
         {
             if (ModelState.IsValid)
             {
+                // Call the business layer asynchronously to add the order
+                await _orderBAL.AddOrderAsync(order);
                 return RedirectToAction("OrderSubmitted");
             }
 
@@ -119,16 +110,48 @@ namespace Order_Management.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditOrder()
+        public IActionResult EditOrder(int orderId)
         {
-            return View();
+            // Get the order by ID from the business layer
+            var order = await _orderBAL.GetOrderByIdAsync(orderId);
+
+            if (order == null)
+            {
+                // Handle not found case
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrder(Order order)
+        {
+            if (ModelState.IsValid)
+            {
+                // Call the business layer asynchronously to update the order
+                await _orderBAL.UpdateOrderAsync(order);
+                return RedirectToAction("OrderUpdated");
+            }
+
+            return View(order);
         }
 
         [HttpGet]
-        public IActionResult DeleteOrder()
+        public IActionResult DeleteOrder(int orderId)
         {
-            return View();
+            // Get the order by ID from the business layer
+            var order = await _orderBAL.GetOrderByIdAsync(orderId);
+
+            if (order == null)
+            {
+                // Handle not found case
+                return NotFound();
+            }
+
+            return View(order);
         }
+
 
         public IActionResult Privacy()
         {
